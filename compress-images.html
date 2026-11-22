@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ضغط الصور أونلاين مجاناً | ورشة الصور</title>
+<meta name="description" content="قلّل حجم صور JPG وPNG وWebP مع التحكم بالجودة، داخل جهازك.">
+<link rel="canonical" href="https://example.com/compress-images">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🖼️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body data-mode="compress">
+<div class="wrap">
+<header>
+  <a class="brand" href="/"><span class="strip" aria-hidden="true"><i></i><i></i><i></i><i></i></span>ورشة الصور<span class="back">الرئيسية</span></a>
+  <h1>ضغط الصور</h1>
+  <p class="sub">قلّل حجم صور JPG وPNG وWebP مع التحكم بالجودة، داخل جهازك.</p>
+</header>
+
+<div class="drop" id="drop">
+  <i></i><i></i><i></i><i></i>
+  <label class="zone" for="file">
+    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+      <circle cx="30" cy="30" r="20" stroke="currentColor" stroke-width="2"/>
+      <circle cx="30" cy="30" r="10" stroke="var(--c)" stroke-width="2"/>
+      <path d="M30 4v14M30 42v14M4 30h14M42 30h14" stroke="currentColor" stroke-width="2"/>
+      <circle cx="30" cy="30" r="3" fill="var(--m)"/>
+    </svg>
+    <span class="zt">أفلت صورك هنا</span>
+    <span class="zh">يدعم JPG وPNG وWebP وGIF، حتى 20 صورة معاً</span>
+    <span class="btn">اختر صوراً</span>
+  </label>
+  <input class="sr" type="file" id="file" accept="image/*" multiple>
+</div>
+<div id="msg" role="status" aria-live="polite"></div>
+
+
+
+<section class="panel">
+  <div class="f" data-m="compress resize">
+    <label for="q"><span>الجودة</span><b class="n" id="qv">75%</b></label>
+    <input type="range" id="q" min="30" max="95" value="75">
+    <small>كلما قلّت الجودة صغر الحجم. من 70 إلى 80 مناسبة لمعظم الصور.</small>
+  </div>
+  <div class="f" data-m="compress resize">
+    <label for="fmt">صيغة الملف</label>
+    <select id="fmt"><option value="jpeg">JPG</option><option value="webp">WebP (أصغر حجماً)</option><option value="png">PNG (بدون فقد، بلا جودة)</option></select>
+  </div>
+  <div class="f" data-m="compress">
+    <label for="max">تصغير الأبعاد (اختياري)</label>
+    <select id="max"><option value="0">الأبعاد الأصلية</option><option value="2560">أطول ضلع 2560 px</option><option value="1920">أطول ضلع 1920 px</option><option value="1280">أطول ضلع 1280 px</option><option value="800">أطول ضلع 800 px</option></select>
+  </div>
+  <div data-m="resize" class="f">
+    <div class="row">
+      <div class="f"><label for="w">العرض (px)</label><input type="number" id="w" dir="ltr" inputmode="numeric" min="1" max="10000" placeholder="تلقائي"></div>
+      <div class="f"><label for="h">الارتفاع (px)</label><input type="number" id="h" dir="ltr" inputmode="numeric" min="1" max="10000" placeholder="تلقائي"></div>
+    </div>
+    <label class="chk"><input type="checkbox" id="lock" checked>الحفاظ على النسبة بين العرض والارتفاع</label>
+    <small>اكتب العرض فقط أو الارتفاع فقط ليُحسب الآخر تلقائياً.</small>
+  </div>
+  <div class="f" data-m="print">
+    <div class="lb"><span>المقاس</span></div>
+    <div class="chips" id="chips"></div>
+    <div class="f" id="cust" hidden>
+      <div class="row3">
+        <div class="f"><label for="cw">العرض</label><input type="number" id="cw" dir="ltr" inputmode="decimal" step="any" min="0" placeholder="مثال 10"></div>
+        <div class="f"><label for="ch">الارتفاع</label><input type="number" id="ch" dir="ltr" inputmode="decimal" step="any" min="0" placeholder="مثال 15"></div>
+        <div class="f"><label for="cu">الوحدة</label><select id="cu"><option value="cm">سم (cm)</option><option value="in">إنش (in)</option><option value="px">بكسل (px)</option></select></div>
+      </div>
+    </div>
+    <p class="hint" id="pinfo"></p>
+  </div>
+  <div class="row" data-m="print">
+    <div class="f" id="f-or"><div class="lb"><span>الاتجاه</span></div>
+      <div class="tg" id="tg-o"><button class="chip" data-v="0" aria-pressed="true">عمودي</button><button class="chip" data-v="1" aria-pressed="false">أفقي</button></div></div>
+    <div class="f"><label for="dpi">الدقة</label>
+      <select id="dpi"><option value="300">300 DPI للطباعة</option><option value="150">150 DPI مسودة</option></select></div>
+  </div>
+  <div class="f" data-m="print">
+    <div class="lb"><span>إذا اختلفت نسبة الصورة عن المقاس</span></div>
+    <div class="tg" id="tg-f"><button class="chip" data-v="1" aria-pressed="true">قص الأطراف</button><button class="chip" data-v="0" aria-pressed="false">إبقاء الصورة كاملة</button></div>
+  </div>
+</section>
+
+<div class="sum" id="sumbar" hidden><span id="sum"></span><span><button class="btn s" id="dall">تنزيل الكل ZIP</button> <button class="lnk" id="clr">مسح الكل</button></span></div>
+<div class="res" id="res"></div>
+
+<footer>
+  <p>مقاسات الطباعة تُحسب بالبكسل حسب الدقة، وتُحفظ الدقة داخل ملف JPG ليقرأها برنامج الطباعة.</p>
+  <p>إن لم يبدأ التنزيل، اضغط مطولاً على الصورة المصغّرة واختر حفظ الصورة.</p>
+</footer>
+<nav class="more"><b>أدوات أخرى</b><a href="/resize-images">تغيير أبعاد الصور</a><a href="/print-photos">تجهيز الصور للطباعة</a><a href="/images-to-pdf">صور إلى PDF</a><a href="/images-to-gif">صور إلى GIF</a><a href="/merge-pdf">دمج ملفات PDF</a><a href="/split-pdf">تقسيم PDF</a><a href="/compress-files">ضغط الملفات إلى ZIP</a><a href="/extract-audio">استخراج الصوت من الفيديو</a><a href="/compress-video">ضغط الفيديو</a><a href="/video-to-gif">فيديو إلى GIF</a><a href="/trim-video">قص الفيديو</a><a href="/mute-video">إزالة الصوت من الفيديو</a><a href="/convert-video">تحويل صيغة الفيديو</a><a href="/pdf-to-word">PDF إلى Word</a><a href="/remove-watermark">إزالة العلامة المائية من الصور</a><a href="/remove-video-watermark">إزالة العلامة المائية من الفيديو</a><a href="/video-screenshot">استخراج صورة من الفيديو</a><a href="/video-speed">تسريع وإبطاء الفيديو</a><a href="/rotate-video">تدوير الفيديو</a><a href="/pdf-to-images">PDF إلى صور</a><a href="/compress-pdf">ضغط PDF</a><a href="/rotate-pdf">تدوير صفحات PDF</a><a href="/remove-tashkeel">إزالة التشكيل من النص</a><a href="/convert-arabic-numbers">تحويل الأرقام الهندية والإنجليزية</a><a href="/number-to-arabic-words">تفقيط الأرقام (رقم إلى كلمات)</a><a href="/arabic-text-decorator">زخرفة الأسماء والنصوص العربية</a><a href="/word-counter">عدّاد الكلمات والحروف</a><a href="/clean-text">تنظيف وتنسيق النص</a></nav>
+<nav class="fn legal-nav"><a href="/about">من نحن</a> <a href="/privacy">الخصوصية</a> <a href="/contact">اتصل بنا</a></nav>
+</div>
+<script src="/assets/common.js"></script>
+<script src="/assets/image.js"></script>
+</body>
+</html>

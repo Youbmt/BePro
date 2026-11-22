@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>https://example.com/</loc></url>
+<url><loc>https://example.com/compress-images</loc></url>
+<url><loc>https://example.com/resize-images</loc></url>
+<url><loc>https://example.com/print-photos</loc></url>
+<url><loc>https://example.com/images-to-pdf</loc></url>
+<url><loc>https://example.com/images-to-gif</loc></url>
+<url><loc>https://example.com/merge-pdf</loc></url>
+<url><loc>https://example.com/split-pdf</loc></url>
+<url><loc>https://example.com/compress-files</loc></url>
+<url><loc>https://example.com/extract-audio</loc></url>
+<url><loc>https://example.com/compress-video</loc></url>
+<url><loc>https://example.com/video-to-gif</loc></url>
+<url><loc>https://example.com/trim-video</loc></url>
+<url><loc>https://example.com/mute-video</loc></url>
+<url><loc>https://example.com/convert-video</loc></url>
+<url><loc>https://example.com/pdf-to-word</loc></url>
+<url><loc>https://example.com/remove-watermark</loc></url>
+<url><loc>https://example.com/remove-video-watermark</loc></url>
+<url><loc>https://example.com/video-screenshot</loc></url>
+<url><loc>https://example.com/video-speed</loc></url>
+<url><loc>https://example.com/rotate-video</loc></url>
+<url><loc>https://example.com/pdf-to-images</loc></url>
+<url><loc>https://example.com/compress-pdf</loc></url>
+<url><loc>https://example.com/rotate-pdf</loc></url>
+<url><loc>https://example.com/remove-tashkeel</loc></url>
+<url><loc>https://example.com/convert-arabic-numbers</loc></url>
+<url><loc>https://example.com/number-to-arabic-words</loc></url>
+<url><loc>https://example.com/arabic-text-decorator</loc></url>
+<url><loc>https://example.com/word-counter</loc></url>
+<url><loc>https://example.com/clean-text</loc></url>
+<url><loc>https://example.com/about</loc></url>
+<url><loc>https://example.com/privacy</loc></url>
+<url><loc>https://example.com/contact</loc></url>
+</urlset>
