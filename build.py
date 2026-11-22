@@ -406,6 +406,7 @@ def seo(l,slug,kind,title,desc,faq,BRN):
     t=['<title>%s</title>'%HT.escape(title,quote=False),'<meta name="description" content="%s">'%q(desc),'<meta name="robots" content="index,follow,max-image-preview:large">','<meta name="theme-color" content="#1556E0">','<link rel="canonical" href="%s">'%u(l)]
     t+=['<link rel="alternate" hreflang="%s" href="%s">'%(m,u(m)) for m in LANGS]+['<link rel="alternate" hreflang="x-default" href="%s">'%u('ar')]
     t+=['<meta property="og:type" content="website">','<meta property="og:site_name" content="%s">'%q(BRN[l]),'<meta property="og:title" content="%s">'%q(title),'<meta property="og:description" content="%s">'%q(desc),'<meta property="og:url" content="%s">'%u(l),'<meta property="og:locale" content="%s">'%loc,'<meta property="og:image" content="%s/assets/og.jpg">'%SITE,'<meta name="twitter:card" content="summary_large_image">']
+    if slug=='index':t.append('<meta name="msvalidate.01" content="4FF956B9E92FEBE2B4BFAFA05F206983">')
     C='https://schema.org';ld=[];home=SITE+('/' if l=='ar' else '/'+l+'/')
     if kind=='home':ld+=[{'@context':C,'@type':'WebSite','name':BRN[l],'url':u(l),'inLanguage':l,'description':desc},{'@context':C,'@type':'Organization','name':BRN[l],'url':SITE+'/','email':EMAIL,'logo':SITE+'/assets/logo-512.png'}]
     if kind=='tool':ld+=[{'@context':C,'@type':'WebApplication','name':title,'url':u(l),'description':desc,'applicationCategory':'UtilitiesApplication','operatingSystem':'Any','inLanguage':l,'isAccessibleForFree':True,'offers':{'@type':'Offer','price':'0','priceCurrency':'USD'}},{'@context':C,'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':BRN[l],'item':home},{'@type':'ListItem','position':2,'name':title,'item':u(l)}]}]
@@ -485,7 +486,9 @@ for s,m,k,h1,d in P:
 exec(LEG)
 W('sitemap.xml','<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join('<url><loc>%s/%s</loc></url>\n'%(SITE,x) for x in ['']+[p[0] for p in P]+['about','privacy','contact'])+'</urlset>\n')
 W('robots.txt','User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n'%SITE)
-W('vercel.json','{\n  "cleanUrls": true\n}\n')
+SL_=[p[0] for p in P]+['about','privacy','contact']
+RW=[{'source':pre+'/'+x,'destination':pre+'/'+x+'.html'} for pre in ['','/en','/fr'] for x in SL_]+[{'source':'/en','destination':'/en/index.html'},{'source':'/fr','destination':'/fr/index.html'}]
+Wraw('vercel.json',json.dumps({'cleanUrls':False,'rewrites':RW},indent=1)+'\n')
 W('README.md','''# BePro
 
 موقع ثابت (HTML/CSS/JS) بلا خطوة بناء. كل أداة صفحة مستقلة، والمنطق في assets.
@@ -514,6 +517,8 @@ for x in urls:
     for m in LANGS:sm+='<url><loc>%s</loc><lastmod>2026-11-22</lastmod>'%lc(m,x)+''.join('<xhtml:link rel="alternate" hreflang="%s" href="%s"/>'%(y,lc(y,x)) for y in LANGS)+'<xhtml:link rel="alternate" hreflang="x-default" href="%s"/></url>\n'%lc('ar',x)
 Wraw('sitemap.xml',sm+'</urlset>\n')
 Wraw('robots.txt','User-agent: *\nAllow: /\n\n'+''.join('User-agent: %s\nAllow: /\n\n'%b for b in ['GPTBot','ChatGPT-User','OAI-SearchBot','ClaudeBot','Claude-User','PerplexityBot','Google-Extended','Applebot-Extended'])+'Sitemap: %s/sitemap.xml\n'%SITE)
+Wraw('google60ca13bcba362b2f.html','google-site-verification: google60ca13bcba362b2f.html')
+Wraw('yandex_9bdfb6ab04a3b424.html','<html>\n    <head>\n        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n    </head>\n    <body>Verification: 9bdfb6ab04a3b424</body>\n</html>')
 Wraw('ads.txt','# Replace the line below with the one shown in your Google AdSense account (Sites > ads.txt):\n# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0\n')
 ll='# %s\n\n> Free online tools for images, PDF, video and Arabic text. Files are processed inside the visitor\'s browser and never uploaded. No sign-up, no watermark.\n\nSite languages: Arabic (%s/), English (%s/en/), French (%s/fr/).\n\n## Tools\n'%(trs('BePro','en'),SITE,SITE,SITE)
 for p in P:ll+='- [%s](%s): %s\n'%(trs(p[3],'en'),lc('en',p[0]),trs(p[4],'en'))
