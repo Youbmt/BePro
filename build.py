@@ -145,6 +145,34 @@ TXTBODY='''<header>
 <div class="res" id="tlist"></div>
 <div id="msg" role="status" aria-live="polite"></div>'''
 TO={'tdig': '<section class="panel"><div class="f"><label for="tdir">التحويل</label><select id="tdir"><option value="h">إلى أرقام هندية (٠١٢)</option><option value="e">إلى أرقام إنجليزية (012)</option></select></div></section>', 'tnum': '<section class="panel"><div class="f"><label for="tcur">العملة</label><select id="tcur"><option value="sar">ريال سعودي</option><option value="aed">درهم إماراتي</option><option value="kwd">دينار كويتي</option><option value="egp">جنيه مصري</option><option value="usd">دولار أمريكي</option></select></div></section>'}
+PREVJS=r'''const PJW='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+async function pdfThumb(f,w){
+  if(!window.pdfjsLib)return null;
+  try{pdfjsLib.GlobalWorkerOptions.workerSrc=PJW;
+    const d=await pdfjsLib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise,p=await d.getPage(1),s=w/p.getViewport({scale:1}).width,v=p.getViewport({scale:s}),c=document.createElement('canvas');
+    c.width=v.width;c.height=v.height;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);await p.render({canvasContext:x,viewport:v}).promise;return c}catch(e){return null}}
+function prev(f,name){
+  const t=f.type||'',ext=(name.split('.').pop()||'').toUpperCase().slice(0,4),u=URL.createObjectURL(f);
+  if(t.startsWith('image/')){const i=el('img','th');i.alt='';i.src=u;const g=el('img','pm');g.alt='';g.src=u;return[i,g]}
+  if(t.startsWith('video/')){const v=el('video','pm');v.src=u+'#t=0.1';v.controls=true;v.muted=true;v.playsInline=true;v.preload='metadata';return[el('span','ic c',ext),v]}
+  if(t.startsWith('audio/')){const a=el('audio','pm');a.src=u;a.controls=true;a.preload='metadata';return[el('span','ic m',ext),a]}
+  const ic=el('span','ic '+(t==='application/pdf'?'y':'g'),ext);
+  if(t==='application/pdf'||/\.pdf$/i.test(name))pdfThumb(f,160).then(c=>{if(c){c.className='th';ic.replaceWith(c)}});
+  return[ic,null]}
+function fsel(){
+  const L=$('#fl');L.replaceChildren();
+  F.files.forEach((f,k)=>{
+    const c=el('article','card'),i=el('div','inf'),m=el('div','mt'),a=el('div','act'),x=el('button','lnk','إزالة');
+    if(!f._pv)f._pv=prev(f,f.name);
+    const p=f._pv[0],big=f._pv[1];
+    m.append(nn(fmt(f.size)));i.append(el('div','nm',f.name),m);x.onclick=()=>{F.files.splice(k,1);fsel()};a.append(x);
+    c.append(p,i,a);if(big&&!(f.type||'').startsWith('image/'))c.append(big);L.append(c)});
+  $('#fgo').disabled=!F.files.length}
+function fout(name,blob){
+  const c=el('article','card'),i=el('div','inf'),m=el('div','mt'),b=el('button','btn s','تنزيل'),r=prev(new File([blob],name,{type:blob.type}),name);
+  m.append(nn(fmt(blob.size)));i.append(el('div','nm',name),m);b.onclick=()=>put(name,blob);
+  c.append(r[0],i,b);if(r[1])c.append(r[1]);$('#fres').append(c)}
+'''
 ix=js.index
 A=js[:ix('function dims(){')]
 A=rep(A,"$('#v-file').hidden?$('#msg'):$('#fmsg')","$('#fmsg')||$('#msg')")
@@ -162,6 +190,12 @@ FIL=rep(FIL,"async function imgPdf(files,a4){","async function imgPdf(files,a4,s
 FIL=rep(FIL,"let pw=p.w*.75,ph=p.h*.75","let pw=p.w*(sc||.75),ph=p.h*(sc||.75)")
 FIL=rep(FIL,"const j=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));","const j=f.raw?f:await new Promise(r=>c.toBlob(r,'image/jpeg',.92));")
 FIL=rep(FIL,"e.dataset.fm!==m","!e.dataset.fm.split(' ').includes(m)")
+FIL,n1=re.subn(r'function fsel\(\)\{.*?\n(?=function fsetup)','',FIL,flags=re.S)
+FIL,n2=re.subn(r'function fout\(.*?\n(?=async function imgPdf)','',FIL,flags=re.S)
+assert n1==1 and n2==1
+FIL=rep(FIL,"}catch(e){$('#fres').replaceChildren();note(","}catch(e){$('#fres').replaceChildren();if(e&&e.message&&!e.u&&e.message!=='range'){const d=el('div','mt',e.message);d.dir='ltr';$('#fres').append(d)}note(")
+FIL=rep(FIL,"/^(video|audio)\\//.test(f.type)","(/^(video|audio)\\//.test(f.type)||/\\.(mp4|mov|m4v|webm|mkv|avi|3gp|mp3|wav|m4a|aac|ogg|opus|flac)$/i.test(f.name))")
+FIL+=PREVJS
 FIL+=P2W
 FIL+="\nObject.assign(FT,window.VFT||{});\nfsetup(document.body.dataset.mode);\n"
 # slug, mode, kind, h1, desc
@@ -216,6 +250,33 @@ async function vrun(file,pre,args,out,mime){
   try{await f.deleteFile(inn);await f.deleteFile(out)}catch(e){}
   if(code!==0||!d||!d.length)throw new Error('ff');
   return new Blob([d],{type:mime})}
+async function decodeAudio(f){const C=window.AudioContext||window.webkitAudioContext;if(!C)throw new Error('ctx');const c=new C();try{return await c.decodeAudioData(await f.arrayBuffer())}finally{c.close()}}
+const tick=()=>new Promise(r=>setTimeout(r));
+function pcmWav(ab){
+  const ch=ab.numberOfChannels,sr=ab.sampleRate,n=ab.length,buf=new ArrayBuffer(44+n*ch*2),v=new DataView(buf),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i))};
+  w(0,'RIFF');v.setUint32(4,36+n*ch*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,ch,true);v.setUint32(24,sr,true);v.setUint32(28,sr*ch*2,true);v.setUint16(32,ch*2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*ch*2,true);
+  const d=[];for(let c=0;c<ch;c++)d.push(ab.getChannelData(c));let o=44;
+  for(let i=0;i<n;i++)for(let c=0;c<ch;c++){const s=Math.max(-1,Math.min(1,d[c][i]));v.setInt16(o,s<0?s*32768:s*32767,true);o+=2}
+  return new Blob([buf],{type:'audio/wav'})}
+async function loadLame(){
+  const ok=()=>{try{new lamejs.Mp3Encoder(1,44100,128);return true}catch(e){return false}};
+  if(window.lamejs&&ok())return;
+  for(const u of ['https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.all.js','https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js']){
+    try{delete window.lamejs}catch(e){}
+    await new Promise(r=>{const s=document.createElement('script');s.src=u;s.onload=s.onerror=r;document.head.appendChild(s)});
+    if(window.lamejs&&ok())return}
+  throw new Error('lame')}
+async function pcmMp3(ab,kbps){
+  await loadLame();
+  const ch=Math.min(2,ab.numberOfChannels),enc=new lamejs.Mp3Encoder(ch,ab.sampleRate,kbps),out=[],B=1152*10;
+  const f2i=a=>{const o=new Int16Array(a.length);for(let i=0;i<a.length;i++){const v=Math.max(-1,Math.min(1,a[i]));o[i]=v<0?v*32768:v*32767}return o};
+  const L=f2i(ab.getChannelData(0)),R=ch>1?f2i(ab.getChannelData(1)):null,box=document.querySelector('#fres .mt');
+  for(let i=0,k=0;i<L.length;i+=B,k++){
+    const b=ch>1?enc.encodeBuffer(L.subarray(i,i+B),R.subarray(i,i+B)):enc.encodeBuffer(L.subarray(i,i+B));
+    if(b.length)out.push(new Uint8Array(b));
+    if(k%40===0){if(box)box.textContent='جارٍ المعالجة '+Math.round(i/L.length*100)+'%';await tick()}}
+  const e=enc.flush();if(e.length)out.push(new Uint8Array(e));
+  return new Blob(out,{type:'audio/mpeg'})}
 const dim=f=>new Promise((ok,no)=>{const v=document.createElement('video'),u=URL.createObjectURL(f);v.preload='metadata';v.onloadedmetadata=()=>{ok([v.videoWidth,v.videoHeight]);URL.revokeObjectURL(u)};v.onerror=()=>no(new Error('dim'));v.src=u});
 window.VID={
  async vwm(f){const d=await dim(f),p=$('#vwp').value,W=Math.max(8,Math.round(d[0]*(+$('#vww').value||20)/100)),H=Math.max(8,Math.round(d[1]*(+$('#vwh').value||10)/100)),x=p[1]==='l'?2:d[0]-W-2,y=p[0]==='t'?2:d[1]-H-2;
@@ -223,7 +284,7 @@ window.VID={
  async vshot(f){return[await vrun(f,['-ss',''+(+$('#vts').value||0)],['-frames:v','1'],'out.png','image/png'),nm(f,'-frame.png')]},
  async vspeed(f){const s=$('#vsp').value;return[await vrun(f,[],['-vf','setpts=PTS/'+s,'-af','atempo='+s,'-c:v','libx264','-preset','veryfast','-c:a','aac'],'out.mp4','video/mp4'),nm(f,'-speed'+s+'.mp4')]},
  async vrot(f){return[await vrun(f,[],['-vf',$('#vro').value,'-c:v','libx264','-preset','veryfast','-c:a','aac'],'out.mp4','video/mp4'),nm(f,'-rotated.mp4')]},
- async vextract(f){const x=$('#vf').value,b=$('#vb').value+'k',A={mp3:['-c:a','libmp3lame','-b:a',b],m4a:['-c:a','aac','-b:a',b],ogg:['-c:a','libvorbis','-b:a',b],opus:['-c:a','libopus','-b:a',b],flac:['-c:a','flac'],wav:[]},M={mp3:'audio/mpeg',m4a:'audio/mp4',ogg:'audio/ogg',opus:'audio/ogg',flac:'audio/flac',wav:'audio/wav'};return[await vrun(f,[],['-vn',...A[x]],'out.'+x,M[x]),nm(f,'.'+x)]},
+ async vextract(f){const x=$('#vf').value,k=+$('#vb').value;if(x==='mp3'||x==='wav'){let a=null;try{a=await decodeAudio(f)}catch(e){}if(a){if(x==='wav')return[pcmWav(a),nm(f,'.wav')];try{return[await pcmMp3(a,k),nm(f,'.mp3')]}catch(e){note('تعذّر ترميز MP3 فتم إنشاء ملف WAV بدلاً منه.');return[pcmWav(a),nm(f,'.wav')]}}}const b=k+'k',A={mp3:['-c:a','libmp3lame','-b:a',b],m4a:['-c:a','aac','-b:a',b],ogg:['-c:a','libvorbis','-b:a',b],opus:['-c:a','libopus','-b:a',b],flac:['-c:a','flac'],wav:[]},M={mp3:'audio/mpeg',m4a:'audio/mp4',ogg:'audio/ogg',opus:'audio/ogg',flac:'audio/flac',wav:'audio/wav'};return[await vrun(f,[],['-vn',...A[x]],'out.'+x,M[x]),nm(f,'.'+x)]},
  async vcompress(f){return[await vrun(f,[],['-vf',"scale=-2:'min(ih,"+$('#vh').value+")'",'-c:v','libx264','-crf',$('#vc').value,'-preset','veryfast','-c:a','aac','-b:a','128k'],'out.mp4','video/mp4'),nm(f,'-compressed.mp4')]},
  async vgif(f){return[await vrun(f,[],['-t','10','-vf','fps='+$('#vr').value+',scale='+$('#vw').value+':-1:flags=lanczos,split[a][b];[a]palettegen[p];[b][p]paletteuse'],'out.gif','image/gif'),nm(f,'.gif')]},
  async vtrim(f){const s=+$('#vs').value||0,e=+$('#ve').value||0;if(e<=s)throw Object.assign(new Error('u'),{u:'يجب أن تكون النهاية بعد البداية.'});
@@ -256,7 +317,7 @@ textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px
 .panel+.f{margin-top:16px}#tin{margin-bottom:12px}
 .lang{display:flex;gap:14px;justify-content:flex-end;padding:2px 0 6px;font-size:.85rem}
 .lang a{color:var(--mut);text-decoration:none}.lang a[aria-current]{color:var(--ink);font-weight:600}
-.faq{margin-top:8px}\n.logo{width:36px;height:36px;border-radius:50%;object-fit:contain;flex:none}\n.cover{display:block;width:100%;height:auto;margin:22px 0 0;border-radius:16px}
+.faq{margin-top:8px}\n.logo{width:36px;height:36px;border-radius:50%;object-fit:contain;flex:none}\n.cover{display:block;width:100%;height:auto;margin:22px 0 0;border-radius:16px}\n#fl{display:grid;gap:10px;margin:0 0 14px}\n.card{grid-template-columns:88px 1fr auto}\n.th{width:88px;height:88px}\n.card .ic{width:56px;height:56px}\n.pm{grid-column:1/-1;display:block;width:100%;max-height:260px;border-radius:10px;background:var(--line)}\naudio.pm{background:none;height:44px}
 .more a{padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:var(--surf);color:inherit;text-decoration:none;font-size:.85rem}
 """
 ICON={'vid':'<rect x="2" y="5" width="14" height="14" rx="2"/><path d="M22 8l-6 4 6 4z"/>'}
@@ -397,6 +458,7 @@ W('assets/text.js',TXTJS)
 SJ='<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>'
 SP='<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>'
 SPJ='<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>'
+SL='<script defer src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>'
 SF='<script defer src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>\n<script defer src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>'
 tag=lambda *n:'\n'.join('<script src="/assets/%s.js"></script>'%x for x in n)
 W('index.html',page('','home','BePro: أدوات الصور والملفات والفيديو أونلاين مجاناً','أدوات مجانية بلا تسجيل: ضغط الصور، تغيير الأبعاد، تجهيز الطباعة، PDF، GIF، وأدوات الفيديو. تعمل داخل جهازك.',home.replace('href="/"','href="/"'),'',''))
@@ -417,7 +479,7 @@ for s,m,k,h1,d in P:
             b=re.sub(r'(<section class="panel" id="fopt" hidden>.*?)(</section>)',lambda x:x.group(1)+VOPT+x.group(2),b,count=1,flags=re.S)
             libs,sc=SF,tag('common','video','files')
         else:
-            libs,sc=SJ+('\n'+SP if m.startswith('pdf') else '')+('\n'+SPJ if m in('towrd','p2img','p2cmp') else ''),tag('common','files')
+            libs,sc=SJ+('\n'+SP if m.startswith('pdf') else '')+('\n'+SPJ if (m in('towrd','p2img','p2cmp','topdf') or m.startswith('pdf')) else ''),tag('common','files')
     b=b.replace('href="#home"','href="/"')+'\n'+FAQ+'\n'+others
     W(s+'.html',page(s,m,h1+' أونلاين مجاناً | BePro',d,b,libs,sc))
 exec(LEG)
