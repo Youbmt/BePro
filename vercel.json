@@ -1,5 +1,411 @@
 {
-  "buildCommand": "PYTHONIOENCODING=utf-8 python3 build.py",
-  "outputDirectory": "public",
-  "cleanUrls": true
+ "buildCommand": "PYTHONIOENCODING=utf-8 python3 build.py",
+ "outputDirectory": "public",
+ "cleanUrls": false,
+ "rewrites": [
+  {
+   "source": "/compress-images",
+   "destination": "/compress-images.html"
+  },
+  {
+   "source": "/resize-images",
+   "destination": "/resize-images.html"
+  },
+  {
+   "source": "/print-photos",
+   "destination": "/print-photos.html"
+  },
+  {
+   "source": "/images-to-pdf",
+   "destination": "/images-to-pdf.html"
+  },
+  {
+   "source": "/images-to-gif",
+   "destination": "/images-to-gif.html"
+  },
+  {
+   "source": "/merge-pdf",
+   "destination": "/merge-pdf.html"
+  },
+  {
+   "source": "/split-pdf",
+   "destination": "/split-pdf.html"
+  },
+  {
+   "source": "/compress-files",
+   "destination": "/compress-files.html"
+  },
+  {
+   "source": "/extract-audio",
+   "destination": "/extract-audio.html"
+  },
+  {
+   "source": "/video-to-mp3",
+   "destination": "/video-to-mp3.html"
+  },
+  {
+   "source": "/compress-video",
+   "destination": "/compress-video.html"
+  },
+  {
+   "source": "/video-to-gif",
+   "destination": "/video-to-gif.html"
+  },
+  {
+   "source": "/trim-video",
+   "destination": "/trim-video.html"
+  },
+  {
+   "source": "/mute-video",
+   "destination": "/mute-video.html"
+  },
+  {
+   "source": "/convert-video",
+   "destination": "/convert-video.html"
+  },
+  {
+   "source": "/pdf-to-word",
+   "destination": "/pdf-to-word.html"
+  },
+  {
+   "source": "/remove-watermark",
+   "destination": "/remove-watermark.html"
+  },
+  {
+   "source": "/remove-video-watermark",
+   "destination": "/remove-video-watermark.html"
+  },
+  {
+   "source": "/video-screenshot",
+   "destination": "/video-screenshot.html"
+  },
+  {
+   "source": "/video-speed",
+   "destination": "/video-speed.html"
+  },
+  {
+   "source": "/rotate-video",
+   "destination": "/rotate-video.html"
+  },
+  {
+   "source": "/pdf-to-images",
+   "destination": "/pdf-to-images.html"
+  },
+  {
+   "source": "/compress-pdf",
+   "destination": "/compress-pdf.html"
+  },
+  {
+   "source": "/rotate-pdf",
+   "destination": "/rotate-pdf.html"
+  },
+  {
+   "source": "/remove-tashkeel",
+   "destination": "/remove-tashkeel.html"
+  },
+  {
+   "source": "/convert-arabic-numbers",
+   "destination": "/convert-arabic-numbers.html"
+  },
+  {
+   "source": "/number-to-arabic-words",
+   "destination": "/number-to-arabic-words.html"
+  },
+  {
+   "source": "/arabic-text-decorator",
+   "destination": "/arabic-text-decorator.html"
+  },
+  {
+   "source": "/word-counter",
+   "destination": "/word-counter.html"
+  },
+  {
+   "source": "/clean-text",
+   "destination": "/clean-text.html"
+  },
+  {
+   "source": "/about",
+   "destination": "/about.html"
+  },
+  {
+   "source": "/privacy",
+   "destination": "/privacy.html"
+  },
+  {
+   "source": "/contact",
+   "destination": "/contact.html"
+  },
+  {
+   "source": "/en/compress-images",
+   "destination": "/en/compress-images.html"
+  },
+  {
+   "source": "/en/resize-images",
+   "destination": "/en/resize-images.html"
+  },
+  {
+   "source": "/en/print-photos",
+   "destination": "/en/print-photos.html"
+  },
+  {
+   "source": "/en/images-to-pdf",
+   "destination": "/en/images-to-pdf.html"
+  },
+  {
+   "source": "/en/images-to-gif",
+   "destination": "/en/images-to-gif.html"
+  },
+  {
+   "source": "/en/merge-pdf",
+   "destination": "/en/merge-pdf.html"
+  },
+  {
+   "source": "/en/split-pdf",
+   "destination": "/en/split-pdf.html"
+  },
+  {
+   "source": "/en/compress-files",
+   "destination": "/en/compress-files.html"
+  },
+  {
+   "source": "/en/extract-audio",
+   "destination": "/en/extract-audio.html"
+  },
+  {
+   "source": "/en/video-to-mp3",
+   "destination": "/en/video-to-mp3.html"
+  },
+  {
+   "source": "/en/compress-video",
+   "destination": "/en/compress-video.html"
+  },
+  {
+   "source": "/en/video-to-gif",
+   "destination": "/en/video-to-gif.html"
+  },
+  {
+   "source": "/en/trim-video",
+   "destination": "/en/trim-video.html"
+  },
+  {
+   "source": "/en/mute-video",
+   "destination": "/en/mute-video.html"
+  },
+  {
+   "source": "/en/convert-video",
+   "destination": "/en/convert-video.html"
+  },
+  {
+   "source": "/en/pdf-to-word",
+   "destination": "/en/pdf-to-word.html"
+  },
+  {
+   "source": "/en/remove-watermark",
+   "destination": "/en/remove-watermark.html"
+  },
+  {
+   "source": "/en/remove-video-watermark",
+   "destination": "/en/remove-video-watermark.html"
+  },
+  {
+   "source": "/en/video-screenshot",
+   "destination": "/en/video-screenshot.html"
+  },
+  {
+   "source": "/en/video-speed",
+   "destination": "/en/video-speed.html"
+  },
+  {
+   "source": "/en/rotate-video",
+   "destination": "/en/rotate-video.html"
+  },
+  {
+   "source": "/en/pdf-to-images",
+   "destination": "/en/pdf-to-images.html"
+  },
+  {
+   "source": "/en/compress-pdf",
+   "destination": "/en/compress-pdf.html"
+  },
+  {
+   "source": "/en/rotate-pdf",
+   "destination": "/en/rotate-pdf.html"
+  },
+  {
+   "source": "/en/remove-tashkeel",
+   "destination": "/en/remove-tashkeel.html"
+  },
+  {
+   "source": "/en/convert-arabic-numbers",
+   "destination": "/en/convert-arabic-numbers.html"
+  },
+  {
+   "source": "/en/number-to-arabic-words",
+   "destination": "/en/number-to-arabic-words.html"
+  },
+  {
+   "source": "/en/arabic-text-decorator",
+   "destination": "/en/arabic-text-decorator.html"
+  },
+  {
+   "source": "/en/word-counter",
+   "destination": "/en/word-counter.html"
+  },
+  {
+   "source": "/en/clean-text",
+   "destination": "/en/clean-text.html"
+  },
+  {
+   "source": "/en/about",
+   "destination": "/en/about.html"
+  },
+  {
+   "source": "/en/privacy",
+   "destination": "/en/privacy.html"
+  },
+  {
+   "source": "/en/contact",
+   "destination": "/en/contact.html"
+  },
+  {
+   "source": "/fr/compress-images",
+   "destination": "/fr/compress-images.html"
+  },
+  {
+   "source": "/fr/resize-images",
+   "destination": "/fr/resize-images.html"
+  },
+  {
+   "source": "/fr/print-photos",
+   "destination": "/fr/print-photos.html"
+  },
+  {
+   "source": "/fr/images-to-pdf",
+   "destination": "/fr/images-to-pdf.html"
+  },
+  {
+   "source": "/fr/images-to-gif",
+   "destination": "/fr/images-to-gif.html"
+  },
+  {
+   "source": "/fr/merge-pdf",
+   "destination": "/fr/merge-pdf.html"
+  },
+  {
+   "source": "/fr/split-pdf",
+   "destination": "/fr/split-pdf.html"
+  },
+  {
+   "source": "/fr/compress-files",
+   "destination": "/fr/compress-files.html"
+  },
+  {
+   "source": "/fr/extract-audio",
+   "destination": "/fr/extract-audio.html"
+  },
+  {
+   "source": "/fr/video-to-mp3",
+   "destination": "/fr/video-to-mp3.html"
+  },
+  {
+   "source": "/fr/compress-video",
+   "destination": "/fr/compress-video.html"
+  },
+  {
+   "source": "/fr/video-to-gif",
+   "destination": "/fr/video-to-gif.html"
+  },
+  {
+   "source": "/fr/trim-video",
+   "destination": "/fr/trim-video.html"
+  },
+  {
+   "source": "/fr/mute-video",
+   "destination": "/fr/mute-video.html"
+  },
+  {
+   "source": "/fr/convert-video",
+   "destination": "/fr/convert-video.html"
+  },
+  {
+   "source": "/fr/pdf-to-word",
+   "destination": "/fr/pdf-to-word.html"
+  },
+  {
+   "source": "/fr/remove-watermark",
+   "destination": "/fr/remove-watermark.html"
+  },
+  {
+   "source": "/fr/remove-video-watermark",
+   "destination": "/fr/remove-video-watermark.html"
+  },
+  {
+   "source": "/fr/video-screenshot",
+   "destination": "/fr/video-screenshot.html"
+  },
+  {
+   "source": "/fr/video-speed",
+   "destination": "/fr/video-speed.html"
+  },
+  {
+   "source": "/fr/rotate-video",
+   "destination": "/fr/rotate-video.html"
+  },
+  {
+   "source": "/fr/pdf-to-images",
+   "destination": "/fr/pdf-to-images.html"
+  },
+  {
+   "source": "/fr/compress-pdf",
+   "destination": "/fr/compress-pdf.html"
+  },
+  {
+   "source": "/fr/rotate-pdf",
+   "destination": "/fr/rotate-pdf.html"
+  },
+  {
+   "source": "/fr/remove-tashkeel",
+   "destination": "/fr/remove-tashkeel.html"
+  },
+  {
+   "source": "/fr/convert-arabic-numbers",
+   "destination": "/fr/convert-arabic-numbers.html"
+  },
+  {
+   "source": "/fr/number-to-arabic-words",
+   "destination": "/fr/number-to-arabic-words.html"
+  },
+  {
+   "source": "/fr/arabic-text-decorator",
+   "destination": "/fr/arabic-text-decorator.html"
+  },
+  {
+   "source": "/fr/word-counter",
+   "destination": "/fr/word-counter.html"
+  },
+  {
+   "source": "/fr/clean-text",
+   "destination": "/fr/clean-text.html"
+  },
+  {
+   "source": "/fr/about",
+   "destination": "/fr/about.html"
+  },
+  {
+   "source": "/fr/privacy",
+   "destination": "/fr/privacy.html"
+  },
+  {
+   "source": "/fr/contact",
+   "destination": "/fr/contact.html"
+  },
+  {
+   "source": "/en",
+   "destination": "/en/index.html"
+  },
+  {
+   "source": "/fr",
+   "destination": "/fr/index.html"
+  }
+ ]
 }
